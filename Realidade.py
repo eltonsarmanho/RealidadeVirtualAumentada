@@ -8,8 +8,6 @@ from triton.language import dtype
 
 cascPathHand = "haarcascade_hand.xml"
 
-# Se quiserem me solicitem este arquivo pelo Whatsapp que envio ele pra vocês: 31.9.8587.2081 (pois ele é muito grande e complexo)
-# É este arquivo que vai identificar a mão de vocês possinilitando assim a IMERSÃO
 
 handCascade = cv2.CascadeClassifier(cascPathHand)
 
@@ -37,7 +35,7 @@ hand_in_box_red = False
 font = cv2.FONT_HERSHEY_SIMPLEX
 font_scale = 2
 font_thickness = 4
-text_color = (0, 0, 0)  # Cor preta
+text_color = (255, 255, 255)  # Cor preta
 
 while True:
     if not video_capture.isOpened():
@@ -81,10 +79,10 @@ while True:
            box_position_black[1] < y < box_position_black[1] + box_size_black:
             hand_in_box_black = True
             hand_in_box_red = False
-            # Adiciona o texto "CELI ROAD" em baixo da tela, no centro, em preto e negrito
-            text_size = cv2.getTextSize('CELI ROAD', font, font_scale, font_thickness)[0]
+            # Adiciona o texto "CELI ROAD" em baixo da tela, no centro, em branco e negrito
+            text_size = cv2.getTextSize('Caixa Preta', font, font_scale, font_thickness)[0]
             text_position = ((width - text_size[0]) // 2, height - 20)
-            cv2.putText(frame, 'CELI ROAD', text_position, font, font_scale, text_color, font_thickness, cv2.LINE_AA)
+            cv2.putText(frame, 'Caixa Preta', text_position, font, font_scale, text_color, font_thickness, cv2.LINE_AA)
 
         # Verifica se a mão toca a caixa vermelha
         elif box_position_red[0] < x < box_position_red[0] + box_size_red and \
