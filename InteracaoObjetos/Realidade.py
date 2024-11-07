@@ -4,14 +4,13 @@ import logging as log
 import datetime as dt
 from time import sleep
 
-from triton.language import dtype
 
 cascPathHand = "haarcascade_hand.xml"
 
 
 handCascade = cv2.CascadeClassifier(cascPathHand)
 
-log.basicConfig(filename='webcam.log', level=log.INFO)
+log.basicConfig(filename='../webcam.log', level=log.INFO)
 
 video_capture = cv2.VideoCapture(0)
 anterior = 0
