@@ -1,3 +1,15 @@
 # Default ignored files
 /shelf/
 /workspace.xml
+# Ignora tudo
+*
+
+# Exceto arquivos .py
+!*.py
+
+# Ignora todos os arquivos .xml
+*.xml
+*.png
+
+# Exceto o haarcascade_hand.xml
+!haarcascade_hand.xml
