@@ -5,6 +5,16 @@ import cv2.aruco as aruco
 import pyautogui
 
 def loadAugImages(path):
+    """
+    Carrega todas as imagens de aumento (augmentação) da pasta especificada.
+
+    Args:
+        path (str): Caminho para a pasta contendo as imagens.
+
+    Returns:
+        dict: Um dicionário onde a chave é o nome do arquivo (sem extensão, convertido para inteiro)
+              e o valor é a imagem carregada como um array do OpenCV.
+    """
     myList = os.listdir(path)
     augDicts = {}
     for imgPath in myList:
@@ -13,6 +23,18 @@ def loadAugImages(path):
         augDicts[key] = imgAug
     return augDicts
 def findArucoMarkers(img, markerSize=4, totalMarkers=250, draw=True):
+    """
+    Detecta marcadores ArUco em uma imagem.
+
+    Args:
+        img (numpy.ndarray): Imagem de entrada (BGR).
+        markerSize (int, opcional): Tamanho do marcador ArUco (default=4).
+        totalMarkers (int, opcional): Número total de marcadores no dicionário (default=250).
+        draw (bool, opcional): Se True, desenha os marcadores detectados na imagem (default=True).
+
+    Returns:
+        list: Uma lista contendo os bounding boxes dos marcadores detectados e seus IDs.
+    """
     # Converte a imagem para escala de cinza
     imgGray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
 
@@ -33,6 +55,19 @@ def findArucoMarkers(img, markerSize=4, totalMarkers=250, draw=True):
         aruco.drawDetectedMarkers(img,bboxs)
     return [bboxs,ids]
 def augmentAruco(bbox, id, img, imgAug, drawId=True):
+    """
+    Sobrepõe uma imagem de augmentação sobre o marcador ArUco detectado.
+
+    Args:
+        bbox (numpy.ndarray): Coordenadas dos vértices do marcador detectado.
+        id (int): ID do marcador ArUco.
+        img (numpy.ndarray): Imagem original onde o marcador foi detectado.
+        imgAug (numpy.ndarray): Imagem de augmentação a ser sobreposta.
+        drawId (bool, opcional): Se True, desenha o ID do marcador na imagem (default=True).
+
+    Returns:
+        numpy.ndarray: Imagem resultante com a augmentação aplicada.
+    """
     tl = bbox[0][0][0], bbox[0][0][1]
     tr = bbox[0][1][0], bbox[0][1][1]
     br = bbox[0][2][0], bbox[0][2][1]
@@ -53,8 +88,15 @@ def augmentAruco(bbox, id, img, imgAug, drawId=True):
         cv2.putText( imgOut,str(id),org,cv2.FONT_HERSHEY_SIMPLEX, 1, (255, 0, 0), thickness, lineType)
     return imgOut
 def main():
+    """
+    Função principal que captura vídeo da webcam, detecta marcadores ArUco e aplica augmentação.
+
+    Pressione 'q' para sair do programa.
+    """
     cap = cv2.VideoCapture(0)
-    augDics = loadAugImages("../Markers")
+    # Obtém o caminho absoluto da pasta Markers
+    markers_path = os.path.join(os.path.dirname(__file__), "..", "Markers")
+    augDics = loadAugImages(markers_path)
 
     while True:
         sccuess , img = cap.read()
@@ -64,7 +106,9 @@ def main():
                 if int(id[0]) in augDics:
                     img = augmentAruco(bbox, id, img, augDics[int(id[0])])
         cv2.imshow("Image",img)
-        cv2.waitKey(1)
+        # Sai do loop se a tecla 'q' for pressionada
+        if cv2.waitKey(1) & 0xFF == ord('q'):
+            break
 
 if __name__ == '__main__':
     main();
